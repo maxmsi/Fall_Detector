@@ -18,6 +18,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.view.View;
@@ -55,6 +57,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void OnAccValuesChanged() {
                 ((TextView) findViewById(R.id.sensorsDataField)).setText("X: " + accTracker.values[0] + " Y: " + accTracker.values[1] + " Z: " + accTracker.values[2]);
+            }
+        });
+
+        // TEST FOR ALARM
+        findViewById(R.id.testAlarmButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                if(sharedPreferences.getBoolean("vibrationEnabled", true)) {
+                    vib.vibrate(Integer.parseInt(sharedPreferences.getString("timeDelay", "3")) * 1000);
+                }
             }
         });
 

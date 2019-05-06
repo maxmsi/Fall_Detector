@@ -27,6 +27,10 @@
 
     <PreferenceCategory app:title="SMS Notification">
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="smsEnabled"
+            android:title="Send SMSs" />
         <EditTextPreference
             app:key="signature"
             app:title="@string/signature_title"
@@ -50,8 +54,25 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Sound Notification">
-
+    <PreferenceCategory app:title="Alarm Settings">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="alarmEnabled"
+            android:title="Enable" />
+        <DropDownPreference
+            android:defaultValue="3"
+            android:entries="@array/wait_times"
+            android:entryValues="@array/wait_times"
+            android:key="timeDelay"
+            android:title="Alarm Delay" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="vibrationEnabled"
+            android:title="Vibration" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="soundEnabled"
+            android:title="Sound" />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
