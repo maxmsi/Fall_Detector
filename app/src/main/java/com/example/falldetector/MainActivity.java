@@ -63,10 +63,8 @@ public class MainActivity extends AppCompatActivity {
         // TEST FOR ALARM
         findViewById(R.id.testAlarmButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                if(sharedPreferences.getBoolean("vibrationEnabled", true)) {
-                    vib.vibrate(Integer.parseInt(sharedPreferences.getString("timeDelay", "3")) * 1000);
-                }
+                Intent myIntent = new Intent(MainActivity.this, Alarm.class);
+                MainActivity.this.startActivity(myIntent);
             }
         });
 
