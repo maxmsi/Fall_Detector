@@ -44,9 +44,9 @@ public class AccTracker extends Service implements SensorEventListener{
     private long timeBeetweenAlarms = 5000;
 
     private static final int ACCELEROMETER_SAMPLING_PERIOD = 1000000;
-    private static final double CSV_THRESHOLD = 15;
-    private static final double CAV_THRESHOLD = 18;
-    private static final double CCA_THRESHOLD = 65.5;
+    private static final double ACC_THRESHOLD = 15;
+    private static final double CAV_THRESHOLD = 16;
+    private static final double CCA_THRESHOLD = 55;
 
     private List<Map<AccelerometerAxis, Double>> accelerometerValues = new ArrayList<>();
 
@@ -93,8 +93,8 @@ public class AccTracker extends Service implements SensorEventListener{
         double acceleration = this.calculateSumVector(x, y, z);
         this.addAccelerometerValuesToList(x, y, z, acceleration);
 
-        Log.v("acceleration", Double.toString(acceleration));
-        if (acceleration > CSV_THRESHOLD) {
+        //Log.v("acceleration", Double.toString(acceleration));
+        if (acceleration > ACC_THRESHOLD) {
             double angleVariation = this.calculateAngleVariation();
             Log.v("angleVariation", Double.toString(angleVariation));
             if (angleVariation > CAV_THRESHOLD) {
