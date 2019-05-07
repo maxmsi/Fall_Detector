@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import java.util.Timer;
 
@@ -62,7 +61,7 @@ public class Alarm extends AppCompatActivity {
         mCountDownTimer.start();
 
         // TODO: discard alarm by shaking
-        findViewById(R.id.noHelopButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.noHelpButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 vib.cancel();
                 timer.cancel();
