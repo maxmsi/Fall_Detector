@@ -16,8 +16,6 @@ import java.util.Timer;
 
 public class Alarm extends AppCompatActivity {
 
-
-    private Button noHelpButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

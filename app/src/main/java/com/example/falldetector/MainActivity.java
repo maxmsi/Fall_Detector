@@ -57,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void OnAccValuesChanged() {
                 ((TextView) findViewById(R.id.sensorsDataField)).setText("X: " + accTracker.values[0] + " Y: " + accTracker.values[1] + " Z: " + accTracker.values[2]);
+                if(accTracker.fallDetected) {
+                    accTracker.fallDetected = false;
+                    Intent myIntent = new Intent(MainActivity.this, Alarm.class);
+                    MainActivity.this.startActivity(myIntent);
+                }
             }
         });
 
@@ -73,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SmsManager smsManager = SmsManager.getDefault();
                 String phoneNumber = ((TextView)findViewById(R.id.phoneNumberField)).getText().toString();
-
 
                 String testMessage = "THIS IS A TEST MESSAGE\n"
                                    + "SENDER: " + sharedPreferences.getString("signature", "NOT SET") + "\n"
