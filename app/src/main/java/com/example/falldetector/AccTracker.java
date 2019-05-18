@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ public class AccTracker extends Service implements SensorEventListener{
         Z,
         ACCELERATION
     }
+
+    GyroTracker gyroTracker;
 
     private final Context mContext;
     Float[] values = {0.0f, 0.0f, 0.0f};
@@ -79,7 +82,7 @@ public class AccTracker extends Service implements SensorEventListener{
     @Override
     public void onSensorChanged(SensorEvent event) {
         this.setValues(new Float[] {event.values[0], event.values[1], event.values[2]});
-        if (this.isFallDetected(values[0], values[1], values[2])) {
+        if (this.isFallDetected(values[0], values[1], values[2]) ) {
             if(System.currentTimeMillis() - lastAlarmTime > timeBeetweenAlarms) {
                 fallDetected = true;
                 lastAlarmTime = System.currentTimeMillis();
