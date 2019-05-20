@@ -9,11 +9,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.nfc.Tag;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,19 +26,21 @@ interface GyroValuesChangedListener {
     public void OnGyroValuesChanged();
 }
 
-public class GyroTracker extends Service implements SensorEventListener{
+public class GyroTracker extends Service implements SensorEventListener {
 
     private boolean fallDetectedbyGyro;
     private final Context mContext;
     private SensorManager sensorManager;
     private Sensor gyroscopeSensor;
+    public  SensorEventListener gyroscopeEventListener;
+
     Float[] values = {0.0f, 0.0f, 0.0f};
     private static List<GyroValuesChangedListener> listeners = new ArrayList<>();
 
-    private static final int GYROSCOPE_SAMPLING_PERIOD = 10000;
-    private static final double xAngularVelocity = 5.0;
-    private static final double yAngularVelocity = 5.0;
-    private static final double zAngularVelocity = 5.0;
+    private static  int GYROSCOPE_SAMPLING_PERIOD = 1000;
+    private static final float xAngularVelocity = 5.0f;
+    private static final float yAngularVelocity = 5.0f;
+    private static final float zAngularVelocity = 5.0f;
 
     @Nullable
     @Override
@@ -47,20 +51,32 @@ public class GyroTracker extends Service implements SensorEventListener{
     @Override
     public void onSensorChanged(SensorEvent event) {
         this.setValues(new Float[] {event.values[0], event.values[1], event.values[2]});
-        //Log.v("val1", Double.toString(values[0]));
-        //Log.v("val2", Double.toString(values[1]));
-        //Log.v("val3", Double.toString(values[2]));
 
-        if (this.GyroscopeCondition(values[0], values[1], values[2])){
+        Log.v("val1", Float.toString(event.values[0]));
+        Log.v("val2", Float.toString(event.values[1]));
+        Log.v("val3", Float.toString(event.values[2]));
 
+
+        values[0] = event.values[0];
+        values[1] = event.values[1];
+        values[2] = event.values[2];
+
+
+        if (this.GyroscopeCondition(event.values[0], event.values[1], event.values[2])){
+
+               GYROSCOPE_SAMPLING_PERIOD=50000;
                 fallDetectedbyGyro = true;
 
 
         } else {
+            GYROSCOPE_SAMPLING_PERIOD=1000;
             fallDetectedbyGyro = false;
         }
 
     }
+
+
+
 
 
     @Override
@@ -68,6 +84,8 @@ public class GyroTracker extends Service implements SensorEventListener{
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+
     public boolean getConditionOfGyroscope(){
         return fallDetectedbyGyro;
     }
@@ -82,10 +100,10 @@ public class GyroTracker extends Service implements SensorEventListener{
         else if(val1 >= zAngularVelocity || val3 >= xAngularVelocity)
             return true;
 
-        if (val2>=-yAngularVelocity){
+        if (val2<=-yAngularVelocity){
             return true;
         }
-        else if(val1 >= -zAngularVelocity || val3 >= -xAngularVelocity)
+        else if(val1 <= -zAngularVelocity || val3 <= -xAngularVelocity)
             return true;
 
 
@@ -106,7 +124,7 @@ public class GyroTracker extends Service implements SensorEventListener{
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         sensorManager.registerListener(this, gyroscopeSensor, GYROSCOPE_SAMPLING_PERIOD);
-        fallDetectedbyGyro = false;
+
     }
     public void setValues(Float[] values) {
         this.values = values;

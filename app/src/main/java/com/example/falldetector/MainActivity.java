@@ -1,37 +1,30 @@
 package com.example.falldetector;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private GPSTracker gpsTracker;
     private AccTracker accTracker;
+
+    private SensorManager sensorManager;
+    private Sensor gyroscopeSensor;
+    public  SensorEventListener gyroscopeEventListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,21 +42,48 @@ public class MainActivity extends AppCompatActivity {
 
         // TEST FOR GPS
         gpsTracker = new GPSTracker(this);
-        ((TextView) findViewById(R.id.gpsLocationField)).setText("lat: " + gpsTracker.getLatitude() + " lon: " + gpsTracker.getLongitude());
+        ((TextView) findViewById(R.id.gpsData)).setText("lat: " + gpsTracker.getLatitude() + " lon: " + gpsTracker.getLongitude());
 
         // TEST FOR accelerometer
         accTracker = new AccTracker(this);
         accTracker.addAccValueListener(new AccValuesChangedListener() {
             @Override
             public void OnAccValuesChanged() {
-                ((TextView) findViewById(R.id.sensorsDataField)).setText("X: " + accTracker.values[0] + " Y: " + accTracker.values[1] + " Z: " + accTracker.values[2]);
-                if(accTracker.fallDetected) {
+
+               ((TextView) findViewById(R.id.sensorsDataField)).setText("X: " + accTracker.values[0] + " Y: " + accTracker.values[1] + " Z: " + accTracker.values[2]);
+                if(accTracker.fallDetected ) {
                     accTracker.fallDetected = false;
                     Intent myIntent = new Intent(MainActivity.this, Alarm.class);
                     MainActivity.this.startActivity(myIntent);
                 }
             }
         });
+
+
+
+        //GYROSCOPE TEST
+        sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
+        gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
+        if(gyroscopeSensor==null)
+            ((TextView) findViewById(R.id.sensorsDataField2)).setText("That device does not have an gyroscope sensor");
+
+
+
+        gyroscopeEventListener=new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                ((TextView) findViewById(R.id.sensorsDataField2)).setText("Orientation X (Roll) :"+ Float.toString(event.values[2]) +"\n"+
+                "Orientation Y (Pitch) :"+ Float.toString(event.values[1]) +"\n"+
+                        "Orientation Z (Yaw) :"+ Float.toString(event.values[0]));
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        };
+
 
         // TEST FOR ALARM
         findViewById(R.id.testAlarmButton).setOnClickListener(new View.OnClickListener() {
@@ -98,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                                       ((Button)findViewById(R.id.smsNotificationTest)).setEnabled(true);
                                                       ((ProgressBar)findViewById(R.id.testProgressBar)).setVisibility(View.INVISIBLE);
                                                   }
-                                              }, 5000    //Specific time in milliseconds
+                                              }, 10000000    //Specific time in milliseconds
                     );
                 } catch(IllegalArgumentException e) {
                     ((TextView) findViewById(R.id.phoneNumberField)).setError("Wrong Number");

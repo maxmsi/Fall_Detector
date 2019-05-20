@@ -33,7 +33,6 @@ public class AccTracker extends Service implements SensorEventListener{
         ACCELERATION
     }
 
-    GyroTracker gyroTracker;
 
     private final Context mContext;
     Float[] values = {0.0f, 0.0f, 0.0f};
