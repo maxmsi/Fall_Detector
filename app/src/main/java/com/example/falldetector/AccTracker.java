@@ -82,10 +82,10 @@ public class AccTracker extends Service implements SensorEventListener{
     public void onSensorChanged(SensorEvent event) {
         this.setValues(new Float[] {event.values[0], event.values[1], event.values[2]});
         if (this.isFallDetected(values[0], values[1], values[2]) ) {
-            if(System.currentTimeMillis() - lastAlarmTime > timeBeetweenAlarms) {
+            //if(System.currentTimeMillis() - lastAlarmTime > timeBeetweenAlarms) {
                 fallDetected = true;
                 lastAlarmTime = System.currentTimeMillis();
-            }
+            //}
         } else {
             fallDetected = false;
         }

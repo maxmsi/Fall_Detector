@@ -86,19 +86,6 @@
             android:ems="10"
             android:gravity="start|top" />
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gyroscope data" />
-
-        <EditText
-            android:id="@+id/sensorsDataField2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:editable="false"
-            android:ems="10"
-            android:gravity="start|top" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
