@@ -8,7 +8,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
-import android.util.Log;
 
 
 import androidx.annotation.Nullable;
@@ -39,10 +38,9 @@ public class AccTracker extends Service implements SensorEventListener{
     private SensorManager sensorManager;
     private Sensor accSensor;
 
-    private static final int ACCELEROMETER_SAMPLING_PERIOD = 1000000;
-    private static final double ACC_THRESHOLD = 15;
-    private static final double CAV_THRESHOLD = 16;
-    private static final double CCA_THRESHOLD = 55;
+    private static final double ACC_THRESHOLD = 18;
+    private static final double CAV_THRESHOLD = 21;
+    private static final double CCA_THRESHOLD = 84;
 
     private List<Map<AccelerometerAxis, Double>> accelerometerValues = new ArrayList<>();
 
@@ -50,7 +48,7 @@ public class AccTracker extends Service implements SensorEventListener{
         this.mContext = context;
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, accSensor, ACCELEROMETER_SAMPLING_PERIOD);
+        sensorManager.registerListener(this, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void setValues(Float[] values) {
