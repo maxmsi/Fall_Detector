@@ -3,14 +3,11 @@ package com.example.falldetector;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.nfc.Tag;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 
@@ -22,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 interface AccValuesChangedListener {
-    public void OnAccValuesChanged();
+    void OnAccValuesChanged();
 }
 
 public class AccTracker extends Service implements SensorEventListener{
@@ -42,9 +39,6 @@ public class AccTracker extends Service implements SensorEventListener{
     private SensorManager sensorManager;
     private Sensor accSensor;
 
-    private long lastAlarmTime;
-    private long timeBeetweenAlarms = 5000;
-
     private static final int ACCELEROMETER_SAMPLING_PERIOD = 1000000;
     private static final double ACC_THRESHOLD = 15;
     private static final double CAV_THRESHOLD = 16;
@@ -54,7 +48,6 @@ public class AccTracker extends Service implements SensorEventListener{
 
     public AccTracker(Context context) {
         this.mContext = context;
-        lastAlarmTime = System.currentTimeMillis();
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, accSensor, ACCELEROMETER_SAMPLING_PERIOD);
@@ -82,10 +75,7 @@ public class AccTracker extends Service implements SensorEventListener{
     public void onSensorChanged(SensorEvent event) {
         this.setValues(new Float[] {event.values[0], event.values[1], event.values[2]});
         if (this.isFallDetected(values[0], values[1], values[2]) ) {
-            //if(System.currentTimeMillis() - lastAlarmTime > timeBeetweenAlarms) {
-                fallDetected = true;
-                lastAlarmTime = System.currentTimeMillis();
-            //}
+            fallDetected = true;
         } else {
             fallDetected = false;
         }
@@ -98,10 +88,10 @@ public class AccTracker extends Service implements SensorEventListener{
         //Log.v("acceleration", Double.toString(acceleration));
         if (acceleration > ACC_THRESHOLD) {
             double angleVariation = this.calculateAngleVariation();
-            Log.v("angleVariation", Double.toString(angleVariation));
+            //Log.v("angleVariation", Double.toString(angleVariation));
             if (angleVariation > CAV_THRESHOLD) {
                 double changeInAngle = this.calculateChangeInAngle();
-                Log.v("changeInAngle", Double.toString(changeInAngle));
+                //Log.v("changeInAngle", Double.toString(changeInAngle));
                 if (changeInAngle > CCA_THRESHOLD) {
                     return true;
                 }
