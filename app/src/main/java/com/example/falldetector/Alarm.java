@@ -2,6 +2,7 @@ package com.example.falldetector;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -69,6 +70,21 @@ public class Alarm extends AppCompatActivity {
         };
         mCountDownTimer.start();
 
+        findViewById(R.id.helpButton).setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v) {
+                mCountDownTimer.cancel();
+                if (sharedPreferences.getBoolean("smsEnabled", true)) {
+                    for (int j = 1; j <= 3; j++) {
+                        sendSMS(j);
+                    }
+                }
+                mp.stop();
+                mp.release();
+                vib.cancel();
+                Alarm.super.finish();
+            }
+        });
+
         // TODO: discard alarm by shaking
         findViewById(R.id.noHelpButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -103,6 +119,12 @@ public class Alarm extends AppCompatActivity {
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // We doing this too stop user from exiting app, normally.
+        // super.onBackPressed();
     }
 }
 

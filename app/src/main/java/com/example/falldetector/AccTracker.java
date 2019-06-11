@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.util.Log;
 
 
 import androidx.annotation.Nullable;
@@ -37,10 +38,11 @@ public class AccTracker extends Service implements SensorEventListener{
 
     private SensorManager sensorManager;
     private Sensor accSensor;
+    private int detections = 0;
 
-    private static final double ACC_THRESHOLD = 18;
-    private static final double CAV_THRESHOLD = 21;
-    private static final double CCA_THRESHOLD = 84;
+    private static final double ACC_THRESHOLD = 12.8; //9.2
+    private static final double CAV_THRESHOLD = 16;
+    private static final double CCA_THRESHOLD = 65;
 
     private List<Map<AccelerometerAxis, Double>> accelerometerValues = new ArrayList<>();
 
@@ -48,7 +50,7 @@ public class AccTracker extends Service implements SensorEventListener{
         this.mContext = context;
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, accSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, accSensor, 10000, 10000);
     }
 
     public void setValues(Float[] values) {
@@ -80,21 +82,28 @@ public class AccTracker extends Service implements SensorEventListener{
     }
 
     private boolean isFallDetected(double x, double y, double z) {
-        double acceleration = this.calculateSumVector(x, y, z);
+        double acceleration = this.calculateAcceleration(x, y, z);
         this.addAccelerometerValuesToList(x, y, z, acceleration);
 
-        //Log.v("acceleration", Double.toString(acceleration));
         if (acceleration > ACC_THRESHOLD) {
             double angleVariation = this.calculateAngleVariation();
-            //Log.v("angleVariation", Double.toString(angleVariation));
             if (angleVariation > CAV_THRESHOLD) {
                 double changeInAngle = this.calculateChangeInAngle();
-                //Log.v("changeInAngle", Double.toString(changeInAngle));
                 if (changeInAngle > CCA_THRESHOLD) {
-                    return true;
+                    if(detections == 0) {
+                        detections = 0;
+                        return true;
+                    } else {
+                        detections++;
+                    }
+                } else {
+                    detections = 0;
                 }
+            } else {
+                detections = 0;
             }
-
+        } else {
+            detections = 0;
         }
         return false;
     }
@@ -111,8 +120,8 @@ public class AccTracker extends Service implements SensorEventListener{
     }
 
 
-    private double calculateSumVector(double x, double y, double z) {
-        return Math.abs(x) + Math.abs(y) + Math.abs(z);
+    private double calculateAcceleration(double x, double y, double z) {
+        return Math.sqrt((Math.abs(x)*Math.abs(x)) + (Math.abs(y)*Math.abs(y)) + (Math.abs(x)*Math.abs(x)));
     }
 
     private double calculateAngleVariation() {

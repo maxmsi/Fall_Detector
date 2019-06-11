@@ -17,6 +17,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainActivity extends AppCompatActivity {
     private GPSTracker gpsTracker;
     private AccTracker accTracker;
@@ -37,7 +40,17 @@ public class MainActivity extends AppCompatActivity {
 
         // TEST FOR GPS
         gpsTracker = new GPSTracker(this);
-        ((TextView) findViewById(R.id.gpsData)).setText("lat: " + gpsTracker.getLatitude() + " lon: " + gpsTracker.getLongitude());
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
+                                  @Override
+                                  public void run() {
+                                      ((TextView) findViewById(R.id.gpsData)).setText("lat: " + gpsTracker.getLatitude() + "\nlon: " + gpsTracker.getLongitude());
+                                  }
+                              },
+//Set how long before to start calling the TimerTask (in milliseconds)
+                0,
+//Set the amount of time between each execution (in milliseconds)
+                10000);
 
         // TEST FOR accelerometer
         accTracker = new AccTracker(this);
