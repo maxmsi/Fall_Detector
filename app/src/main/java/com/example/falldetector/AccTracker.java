@@ -40,9 +40,9 @@ public class AccTracker extends Service implements SensorEventListener{
     private Sensor accSensor;
     private int detections = 0;
 
-    private static final double ACC_THRESHOLD = 12.8; //9.2
-    private static final double CAV_THRESHOLD = 16;
-    private static final double CCA_THRESHOLD = 65;
+    public static double ACC_THRESHOLD = 12.8; //9.2
+    public static double CAV_THRESHOLD = 16;
+    public static double CCA_THRESHOLD = 65;
 
     private List<Map<AccelerometerAxis, Double>> accelerometerValues = new ArrayList<>();
 

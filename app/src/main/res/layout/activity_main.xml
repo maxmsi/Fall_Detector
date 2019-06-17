@@ -86,6 +86,48 @@
             android:ems="10"
             android:gravity="start|top" />
 
+        <TextView
+            android:id="@+id/accTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Acceleration: default" />
+
+        <SeekBar
+            android:id="@+id/accSeekBar"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10"
+            android:progress="0" />
+
+        <TextView
+            android:id="@+id/localTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Local change in angle: default" />
+
+        <SeekBar
+            android:id="@+id/localSeekBar"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10"
+            android:progress="0" />
+
+        <TextView
+            android:id="@+id/globalTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Global change in angle: default" />
+
+        <SeekBar
+            android:id="@+id/globalSeekBar"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10"
+            android:progress="0" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

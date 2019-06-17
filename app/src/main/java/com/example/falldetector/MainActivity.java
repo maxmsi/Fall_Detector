@@ -15,6 +15,7 @@ import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.Timer;
@@ -37,6 +38,40 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this );
+
+        ((SeekBar)findViewById(R.id.accSeekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                accTracker.ACC_THRESHOLD = 10 + seekBar.getProgress();
+                ((TextView)findViewById(R.id.accTextView)).setText("Acceleration: " + accTracker.ACC_THRESHOLD);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+        ((SeekBar)findViewById(R.id.localSeekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                accTracker.CAV_THRESHOLD = 13 + seekBar.getProgress();
+                ((TextView)findViewById(R.id.localTextView)).setText("Local change in angle: " + accTracker.CAV_THRESHOLD);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+        ((SeekBar)findViewById(R.id.globalSeekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                accTracker.CCA_THRESHOLD = 40 + seekBar.getProgress() * 5;
+                ((TextView)findViewById(R.id.globalTextView)).setText("Global change in angle: " + accTracker.CCA_THRESHOLD);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
 
         // TEST FOR GPS
         gpsTracker = new GPSTracker(this);
